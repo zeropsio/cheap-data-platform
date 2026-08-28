@@ -14,20 +14,18 @@ services:
     mode: HA
   - hostname: redis
     priority: 10
-    type: keydb@6
-    mode: HA
+    type: valkey:single@7.2
   - hostname: files
     priority: 10
-    type: shared-storage
-    mode: NON_HA
+    type: local-storage:single@1
 
   - hostname: airflowdags
     priority: 5
     type: python@3.12
+    verticalAutoscaling:
+      minRam: 1
     maxContainers: 1
     buildFromGit: https://github.com/zeropsio/recipe-airflow
-    mount:
-      - files
 
   - hostname: airflowui
     type: python@3.12
@@ -36,16 +34,12 @@ services:
     maxContainers: 1
     buildFromGit: https://github.com/zeropsio/recipe-airflow
     enableSubdomainAccess: true
-    mount:
-      - files
   - hostname: airflowscheduler
     type: python@3.12
     verticalAutoscaling:
       minRam: 0.5
     maxContainers: 1
     buildFromGit: https://github.com/zeropsio/recipe-airflow
-    mount:
-      - files
   - hostname: airflowworkers
     type: python@3.12
     verticalAutoscaling:
@@ -53,5 +47,3 @@ services:
     minContainers: 3
     maxContainers: 3
     buildFromGit: https://github.com/zeropsio/recipe-airflow
-    mount:
-      - files

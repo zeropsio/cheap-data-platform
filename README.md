@@ -46,9 +46,10 @@ standalone | Airflow Standalone is for development purposes only. Do not use thi
 
 > [!WARNING]  
 - Data are stored in Postgres
-- Celery executor (running on redis)
-- DAG files are distributed via shared storage (shared mounted volume)
+- Celery executor (running on Valkey)
+- DAG files are distributed via the `files` [Local Storage](https://docs.zerops.io/local-storage/overview) volume, mounted at `/mnt/files` in all Airflow services
 - Only push to the `airflowdags` service to update your DAG files (either via `zcli push airflowdags` or connect your Git with the `airflowdags` service), other services will use the files located in the mounted volume
+- All services that mount the volume run on the same physical machine, see [Local Storage trade-offs](https://docs.zerops.io/local-storage/overview#key-trade-offs)
 - UI access:
   - Username: `admin`
   - Password: `$ADMIN_PASSWORD` generated project environment variable (visible in GUI)
